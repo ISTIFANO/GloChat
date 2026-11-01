@@ -22,8 +22,8 @@ with open(os.path.join(ROOT, "infra", ".env"), encoding="utf-8") as f:
             k, v = line.split("=", 1)
             ENV[k] = v
 
-GW = "http://localhost:8080"
-KC = "http://localhost:8180/realms/marketchat/protocol/openid-connect/token"
+GW = ENV["GATEWAY_URL"]
+KC = ENV["KEYCLOAK_TOKEN_URI"]
 AGDAL = {"label": "Maison", "line": "12 avenue de France", "city": "Rabat", "lat": 33.9981, "lng": -6.8497}
 results = []
 

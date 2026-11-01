@@ -7,7 +7,7 @@ export MSYS_NO_PATHCONV=1
 cd "$(dirname "$0")/.."
 set -a; source infra/.env; set +a
 
-GRAFANA=http://localhost:3001/api/datasources/proxy/uid
+GRAFANA="$GRAFANA_URL/api/datasources/proxy/uid"
 pids=()
 cleanup() { for p in "${pids[@]}"; do kill "$p" 2>/dev/null; done; }
 trap cleanup EXIT
@@ -24,7 +24,7 @@ start api-gateway 8080
 fail=0
 check() { local name="$1"; shift; if "$@"; then echo "PASS  $name"; else echo "FAIL  $name"; fail=1; fi; }
 
-token=$(curl -s -X POST http://localhost:8180/realms/marketchat/protocol/openid-connect/token \
+token=$(curl -s -X POST "$KEYCLOAK_TOKEN_URI" \
   -d grant_type=password -d client_id=marketchat-dev-cli \
   --data-urlencode username=demo@marketchat.local --data-urlencode "password=$DEMO_USER_PASSWORD" | python -c "import sys,json;print(json.load(sys.stdin)['access_token'])")
 
@@ -32,7 +32,7 @@ token=$(curl -s -X POST http://localhost:8180/realms/marketchat/protocol/openid-
 trace_id=$(python -c "import secrets;print(secrets.token_hex(16))")
 parent_span=$(python -c "import secrets;print(secrets.token_hex(8))")
 code=$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $token" \
-  -H "traceparent: 00-$trace_id-$parent_span-01" http://localhost:8080/api/me/whoami)
+  -H "traceparent: 00-$trace_id-$parent_span-01" "$GATEWAY_URL/api/me/whoami")
 check "request through gateway succeeded ($code)" test "$code" = 200
 echo "      trace id: $trace_id"
 

@@ -228,4 +228,22 @@ class CatalogApiIntegrationTest {
         mvc.perform(get("/api/catalog/media/../application.yml"))
                 .andExpect(status().is4xxClientError());
     }
+
+    @Test
+    void listsEveryRestaurantOpenOnesFirstWithTermsForTheLocation() throws Exception {
+        clock.set("2026-11-04T20:00:00");
+        mvc.perform(get("/api/catalog/merchants").param("lat", "33.9981").param("lng", "-6.8497"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.merchants", hasSize(7)))
+                .andExpect(jsonPath("$.merchants[0].open").value(true))
+                .andExpect(jsonPath("$.merchants[*].logoUrl", everyItem(org.hamcrest.Matchers.startsWith("/api/catalog/media/"))))
+                .andExpect(jsonPath("$.merchants[*].etaText").exists())
+                .andExpect(jsonPath("$.merchants[?(@.id=='m-smash')].distanceKm").value(hasItem(0.7)));
+
+        // at 01:00 most kitchens are closed: the ones still open (Smash Lab, until 02:00) come first
+        clock.set("2026-11-05T01:00:00");
+        mvc.perform(get("/api/catalog/merchants").param("lat", "33.9981").param("lng", "-6.8497"))
+                .andExpect(jsonPath("$.merchants[0].id").value("m-smash"))
+                .andExpect(jsonPath("$.merchants[0].open").value(true));
+    }
 }

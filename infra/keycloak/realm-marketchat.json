@@ -1,7 +1,7 @@
 {
   "realm": "marketchat",
   "enabled": true,
-  "displayName": "MarketChat",
+  "displayName": "GloChat",
   "sslRequired": "external",
   "registrationAllowed": true,
   "registrationEmailAsUsername": true,
@@ -177,14 +177,14 @@
       "implicitFlowEnabled": false,
       "serviceAccountsEnabled": false,
       "redirectUris": [
-        "http://localhost:4200/*"
+        "${WEB_BASE_URL}/*"
       ],
       "webOrigins": [
-        "http://localhost:4200"
+        "${WEB_BASE_URL}"
       ],
       "attributes": {
         "pkce.code.challenge.method": "S256",
-        "post.logout.redirect.uris": "http://localhost:4200/*"
+        "post.logout.redirect.uris": "${WEB_BASE_URL}/*"
       },
       "defaultClientScopes": [
         "profile",
@@ -269,5 +269,13 @@
     "basic",
     "profile",
     "email"
-  ]
+  ],
+  "displayNameHtml": "<b>glo</b>chat",
+  "internationalizationEnabled": true,
+  "supportedLocales": [
+    "fr",
+    "ar",
+    "en"
+  ],
+  "defaultLocale": "fr"
 }
