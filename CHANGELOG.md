@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.0
+- README with demo recordings, screenshots, architecture diagram, key flows and tech stack
+
 ## 1.0.0
 - Continue with Google (Keycloak identity brokering), FR/AR/EN login pages
 - Restaurants list with delivery terms, open ones first
