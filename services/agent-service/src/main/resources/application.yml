@@ -1,6 +1,22 @@
 spring:
   application:
     name: agent-service
+  ai:
+    model:
+      # set to "none" to start without an LLM (unit tests do this)
+      chat: ${SPRING_AI_MODEL_CHAT:google-genai}
+    google:
+      genai:
+        # personal key from infra/.env — no default value, never committed
+        api-key: ${GEMINI_API_KEY:}
+        chat:
+          model: ${GEMINI_MODEL:gemini-2.5-flash}
+          temperature: 0.2
+    chat:
+      observations:
+        # prompts/completions are NOT put in traces by default (PII); enabled only in dev/eval for Langfuse
+        log-prompt: ${AI_LOG_CONTENT:false}
+        log-completion: ${AI_LOG_CONTENT:false}
 
 server:
   port: ${SERVER_PORT:8085}
