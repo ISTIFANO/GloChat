@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="380" viewBox="0 0 1280 380">
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a1678"/><stop offset=".55" stop-color="#4b2fe0"/><stop offset="1" stop-color="#7b5cff"/></linearGradient><radialGradient id="glow" cx=".82" cy=".18" r=".45"><stop offset="0" stop-color="#c8f23b" stop-opacity=".35"/><stop offset="1" stop-color="#c8f23b" stop-opacity="0"/></radialGradient><pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="#fff" fill-opacity=".09"/></pattern></defs>
+<rect width="1280" height="380" rx="28" fill="url(#bg)"/>
+<rect width="1280" height="380" rx="28" fill="url(#dots)"/>
+<rect width="1280" height="380" rx="28" fill="url(#glow)"/>
+<circle cx="1150" cy="330" r="160" fill="#fff" fill-opacity=".05"/><circle cx="1210" cy="40" r="90" fill="#fff" fill-opacity=".05"/>
+<rect x="72" y="92" width="168" height="168" rx="44" fill="#fff" fill-opacity=".12"/>
+<svg x="92" y="108" width="128" height="128" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="gc-body" x1="9" y1="4" x2="40" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8f73ff"/>
+      <stop offset=".55" stop-color="#5b3df5"/>
+      <stop offset="1" stop-color="#3a1fc4"/>
+    </linearGradient>
+    <radialGradient id="gc-glow" cx="34.5" cy="11.5" r="7" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ff8a" stop-opacity=".95"/>
+      <stop offset="1" stop-color="#c8f23b" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  
+  <path fill="url(#gc-body)" d="M24 3.5c10.2 0 18 7.4 18 17.2 0 9.6-7.6 15.4-15 21.6l-3 2.6-3-2.6C13.6 36.1 6 30.3 6 20.7 6 10.9 13.8 3.5 24 3.5Z"/>
+  <path fill="#fff" fill-opacity=".14" d="M24 5.5c-8.9 0-15.8 6.3-16 14.8 3.5-6.6 9.4-10.3 16-10.3 3.4 0 6.6.9 9.3 2.6A16.5 16.5 0 0 0 24 5.5Z"/>
+  
+  <path fill="none" stroke="#fff" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" d="M30.1 15.4A8 8 0 1 0 32 20.5H25"/>
+  
+  <circle cx="34.5" cy="11.5" r="7" fill="url(#gc-glow)"/>
+  <circle cx="34.5" cy="11.5" r="2.9" fill="#c8f23b"/>
+</svg>
+<text x="282" y="168" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="76" font-weight="800" fill="#ffffff" text-anchor="start" letter-spacing="-3">GloChat</text>
+<text x="286" y="214" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="27" font-weight="500" fill="#e9e4ff" text-anchor="start" >Order food by simply saying what you want.</text>
+<text x="286" y="248" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="18" font-weight="400" fill="#c9bdff" text-anchor="start" >AI-first conversational marketplace · event-driven microservices</text>
+<rect x="286" y="282" width="130" height="34" rx="17" fill="#fff" fill-opacity=".14" stroke="#fff" stroke-opacity=".25"/>
+<text x="350.9" y="304" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#ffffff" text-anchor="middle" >Spring Boot 4</text>
+<rect x="425.8" y="282" width="61" height="34" rx="17" fill="#fff" fill-opacity=".14" stroke="#fff" stroke-opacity=".25"/>
+<text x="456.3" y="304" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#ffffff" text-anchor="middle" >Kafka</text>
+<rect x="496.8" y="282" width="87" height="34" rx="17" fill="#fff" fill-opacity=".14" stroke="#fff" stroke-opacity=".25"/>
+<text x="540.2" y="304" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#ffffff" text-anchor="middle" >Keycloak</text>
+<rect x="593.6" y="282" width="70" height="34" rx="17" fill="#fff" fill-opacity=".14" stroke="#fff" stroke-opacity=".25"/>
+<text x="628.4" y="304" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#ffffff" text-anchor="middle" >Stripe</text>
+<rect x="673.2" y="282" width="70" height="34" rx="17" fill="#fff" fill-opacity=".14" stroke="#fff" stroke-opacity=".25"/>
+<text x="708.0" y="304" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#ffffff" text-anchor="middle" >Gemini</text>
+<rect x="752.8000000000001" y="282" width="130" height="34" rx="17" fill="#fff" fill-opacity=".14" stroke="#fff" stroke-opacity=".25"/>
+<text x="817.7" y="304" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#ffffff" text-anchor="middle" >OpenTelemetry</text>
+<rect x="892.6000000000001" y="282" width="104" height="34" rx="17" fill="#fff" fill-opacity=".14" stroke="#fff" stroke-opacity=".25"/>
+<text x="944.6000000000001" y="304" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#ffffff" text-anchor="middle" >Angular 21</text>
+</svg>
