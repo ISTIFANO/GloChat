@@ -13,9 +13,15 @@
 
     <artifactId>marketchat-common</artifactId>
     <name>marketchat-common</name>
-    <description>Shared value objects, error codes and event schemas (no entities)</description>
+    <description>Shared value objects, error codes, event schemas and security helpers (no entities)</description>
 
     <dependencies>
+        <!-- Only for the JWT validator helper; each service brings its own resource-server starter. -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-jose</artifactId>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

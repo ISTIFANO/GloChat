@@ -31,6 +31,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-ai.version>2.0.2</spring-ai.version>
         <spring-cloud.version>2025.1.4</spring-cloud.version>
+        <archunit.version>1.5.1</archunit.version>
     </properties>
 
     <dependencyManagement>
@@ -53,6 +54,11 @@
                 <groupId>com.marketchat</groupId>
                 <artifactId>marketchat-common</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tngtech.archunit</groupId>
+                <artifactId>archunit-junit5</artifactId>
+                <version>${archunit.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
