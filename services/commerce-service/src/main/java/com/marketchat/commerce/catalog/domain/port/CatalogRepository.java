@@ -23,4 +23,11 @@ public interface CatalogRepository {
     Optional<Product> findProduct(String productId);
 
     Optional<Merchant> findMerchant(String merchantId);
+
+    /** A product of a merchant's menu with its category (null category = uncategorized). */
+    record MenuEntry(String categoryId, String categoryName, int categoryPosition, Product product) {
+    }
+
+    /** Active products of one merchant, ordered by category position then product position. */
+    List<MenuEntry> findMenu(String merchantId);
 }
