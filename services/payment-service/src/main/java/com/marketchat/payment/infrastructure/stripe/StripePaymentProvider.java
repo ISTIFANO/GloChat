@@ -40,7 +40,7 @@ public class StripePaymentProvider implements PaymentProvider {
                                 .setCurrency(r.currency().toLowerCase())
                                 .setUnitAmount(r.amountMinor())
                                 .setProductData(SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                        .setName("MarketChat · commande " + r.orderNumber())
+                                        .setName("GloChat · commande " + r.orderNumber())
                                         .build())
                                 .build())
                         .build())
