@@ -30,3 +30,5 @@ dist/
 
 # Logs
 *.log
+infra/.*.log
+infra/.body.tmp
