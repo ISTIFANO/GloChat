@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.1
+- Stripe checkout shows the GloChat order label
+
 ## 0.3.0 — Ordering and payment
 - Cart: one merchant per cart, configurable products, saved addresses, repriced on read
 - Checkout: 10-minute quotes, idempotent confirmation, price-change detection
