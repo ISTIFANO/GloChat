@@ -91,6 +91,13 @@ class JdbcCatalogRepository implements CatalogRepository {
     }
 
     @Override
+    public List<Merchant> findActiveMerchants() {
+        List<String> ids = jdbc.sql("SELECT id FROM merchants WHERE active ORDER BY name").query(String.class).list();
+        Map<String, Merchant> byId = loadMerchants(ids);
+        return ids.stream().map(byId::get).filter(java.util.Objects::nonNull).toList();
+    }
+
+    @Override
     public Optional<Merchant> findMerchant(String merchantId) {
         return Optional.ofNullable(loadMerchants(List.of(merchantId)).get(merchantId));
     }

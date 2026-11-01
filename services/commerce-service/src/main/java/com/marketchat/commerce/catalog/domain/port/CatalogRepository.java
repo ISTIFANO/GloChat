@@ -24,6 +24,9 @@ public interface CatalogRepository {
 
     Optional<Merchant> findMerchant(String merchantId);
 
+    /** Every active merchant (the home page's restaurant carousel). */
+    List<Merchant> findActiveMerchants();
+
     /** A product of a merchant's menu with its category (null category = uncategorized). */
     record MenuEntry(String categoryId, String categoryName, int categoryPosition, Product product) {
     }
