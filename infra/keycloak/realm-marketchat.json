@@ -1,7 +1,7 @@
 {
   "realm": "marketchat",
   "enabled": true,
-  "displayName": "MarketChat",
+  "displayName": "GloChat",
   "sslRequired": "external",
   "registrationAllowed": true,
   "registrationEmailAsUsername": true,
@@ -269,5 +269,13 @@
     "basic",
     "profile",
     "email"
-  ]
+  ],
+  "displayNameHtml": "<b>glo</b>chat",
+  "internationalizationEnabled": true,
+  "supportedLocales": [
+    "fr",
+    "ar",
+    "en"
+  ],
+  "defaultLocale": "fr"
 }
