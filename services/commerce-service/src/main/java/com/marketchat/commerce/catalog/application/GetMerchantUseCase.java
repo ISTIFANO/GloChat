@@ -26,22 +26,26 @@ public class GetMerchantUseCase {
         this.clock = clock;
     }
 
+    /**
+     * All restaurants with their delivery terms for the customer's location: open first, then those that deliver
+     * there, then the nearest.
+     */
+    public List<MerchantPageResult.Info> list(GeoPoint location) {
+        ZonedDateTime now = ZonedDateTime.now(clock).withZoneSameInstant(SearchCatalogUseCase.MERCHANT_ZONE);
+        return repository.findActiveMerchants().stream()
+                .map(m -> info(m, location != null ? location : m.location(), now))
+                .sorted(java.util.Comparator.comparing((MerchantPageResult.Info i) -> !i.open())
+                        .thenComparing(i -> !i.delivers())
+                        .thenComparingDouble(MerchantPageResult.Info::distanceKm))
+                .toList();
+    }
+
     public MerchantPageResult get(String merchantId, GeoPoint location) {
         Merchant m = repository.findMerchant(merchantId)
                 .orElseThrow(() -> new CatalogException("MERCHANT_NOT_FOUND", 404, "Unknown merchant " + merchantId));
         ZonedDateTime now = ZonedDateTime.now(clock).withZoneSameInstant(SearchCatalogUseCase.MERCHANT_ZONE);
         GeoPoint from = location != null ? location : m.location();
-        double distance = ProductCards.round1(m.location().distanceKmTo(from));
-
-        String todayHours = m.hours().slotsOn(now.getDayOfWeek()).stream()
-                .map(s -> s.opens() + "–" + s.closes())
-                .collect(Collectors.joining(", "));
-
-        MerchantPageResult.Info info = new MerchantPageResult.Info(
-                m.id(), m.name(), m.emoji(), m.description(), m.logoUrl(), m.coverUrl(), m.cuisineTags(),
-                m.hours().isOpenAt(now), todayHours.isEmpty() ? null : todayHours,
-                distance, DeliveryTerms.etaText(m, distance), DeliveryTerms.fee(m, distance), m.minOrderAmount(),
-                DeliveryTerms.delivers(m, distance), m.acceptsCash(), m.acceptsCard());
+        MerchantPageResult.Info info = info(m, from, now);
 
         Map<String, List<ProductCardResult>> byCategory = new LinkedHashMap<>();
         Map<String, String> names = new LinkedHashMap<>();
@@ -54,5 +58,17 @@ public class GetMerchantUseCase {
                 .map(en -> new MerchantPageResult.Section(en.getKey(), names.get(en.getKey()), en.getValue()))
                 .toList();
         return new MerchantPageResult(info, sections);
+    }
+
+    private static MerchantPageResult.Info info(Merchant m, GeoPoint from, ZonedDateTime now) {
+        double distance = ProductCards.round1(m.location().distanceKmTo(from));
+        String todayHours = m.hours().slotsOn(now.getDayOfWeek()).stream()
+                .map(s -> s.opens() + "–" + s.closes())
+                .collect(Collectors.joining(", "));
+        return new MerchantPageResult.Info(
+                m.id(), m.name(), m.emoji(), m.description(), m.logoUrl(), m.coverUrl(), m.cuisineTags(),
+                m.hours().isOpenAt(now), todayHours.isEmpty() ? null : todayHours,
+                distance, DeliveryTerms.etaText(m, distance), DeliveryTerms.fee(m, distance), m.minOrderAmount(),
+                DeliveryTerms.delivers(m, distance), m.acceptsCash(), m.acceptsCard());
     }
 }
