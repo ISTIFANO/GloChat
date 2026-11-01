@@ -5,6 +5,11 @@ spring:
 server:
   port: ${SERVER_PORT:8085}
 
+marketchat:
+  security:
+    issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/marketchat}
+    jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8180/realms/marketchat/protocol/openid-connect/certs}
+
 management:
   endpoints:
     web:
