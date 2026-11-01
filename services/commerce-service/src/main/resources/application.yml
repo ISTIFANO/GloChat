@@ -2,14 +2,14 @@ spring:
   application:
     name: commerce-service
   datasource:
-    url: ${COMMERCE_DB_URL:jdbc:postgresql://localhost:5432/commerce_db}
+    url: ${COMMERCE_DB_URL}
     username: ${COMMERCE_DB_USER:commerce}
     # no default: the password comes from infra/.env (COMMERCE_DB_PASSWORD)
     password: ${COMMERCE_DB_PASSWORD:}
   flyway:
     locations: classpath:db/migration
   kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
     producer:
       acks: all
       properties:
@@ -35,17 +35,17 @@ server:
 marketchat:
   web:
     # where Stripe sends the customer back (the separately deployed web app)
-    base-url: ${WEB_BASE_URL:http://localhost:4200}
+    base-url: ${WEB_BASE_URL}
   payment:
-    base-url: ${PAYMENT_URL:http://localhost:8084}
+    base-url: ${PAYMENT_URL}
     client-id: commerce-service
     # no default: from infra/.env (COMMERCE_CLIENT_SECRET)
     client-secret: ${COMMERCE_CLIENT_SECRET:}
   security:
-    token-uri: ${KEYCLOAK_TOKEN_URI:http://localhost:8180/realms/marketchat/protocol/openid-connect/token}
+    token-uri: ${KEYCLOAK_TOKEN_URI}
     # Tokens' "iss" claim (public URL) and where to fetch signing keys (may differ inside Docker)
-    issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/marketchat}
-    jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8180/realms/marketchat/protocol/openid-connect/certs}
+    issuer-uri: ${KEYCLOAK_ISSUER_URI}
+    jwk-set-uri: ${KEYCLOAK_JWK_SET_URI}
 
 management:
   tracing:
@@ -60,11 +60,11 @@ management:
     tracing:
       export:
         otlp:
-          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/traces
+          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT}/v1/traces
     logging:
       export:
         otlp:
-          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/logs
+          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT}/v1/logs
   logging:
     export:
       otlp:
@@ -73,7 +73,7 @@ management:
     metrics:
       export:
         enabled: ${OTEL_EXPORT_ENABLED:true}
-        url: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/metrics
+        url: ${OTEL_EXPORTER_OTLP_ENDPOINT}/v1/metrics
         step: 10s
   endpoints:
     web:

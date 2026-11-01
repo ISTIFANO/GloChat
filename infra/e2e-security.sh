@@ -6,9 +6,9 @@ export MSYS_NO_PATHCONV=1
 cd "$(dirname "$0")/.."
 set -a; source infra/.env; set +a
 
-KC=http://localhost:8180/realms/marketchat/protocol/openid-connect/token
-GW=http://localhost:8080
-COMMERCE=http://localhost:8081
+KC="$KEYCLOAK_TOKEN_URI"
+GW="$GATEWAY_URL"
+COMMERCE="$COMMERCE_URL"
 pids=()
 cleanup() { for p in "${pids[@]}"; do kill "$p" 2>/dev/null; done; }
 trap cleanup EXIT

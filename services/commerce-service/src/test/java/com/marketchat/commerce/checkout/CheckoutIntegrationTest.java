@@ -243,7 +243,7 @@ class CheckoutIntegrationTest extends ApiTestBase {
         assertThat(paymentGateway.sessions).singleElement().satisfies(s -> {
             assertThat(s.amount()).isEqualByComparingTo("171.00");
             assertThat(s.currency()).isEqualTo("MAD");
-            assertThat(s.successUrl()).isEqualTo("http://localhost:4200/orders/" + number + "?payment=success");
+            assertThat(s.successUrl()).isEqualTo("http://web.test/orders/" + number + "?payment=success");
         });
 
         // still pending at the provider: nothing changes
