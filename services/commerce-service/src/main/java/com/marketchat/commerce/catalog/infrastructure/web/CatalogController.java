@@ -71,6 +71,16 @@ class CatalogController {
         return getProduct.get(productId, location);
     }
 
+    record MerchantsResponse(List<MerchantPageResult.Info> merchants) {
+    }
+
+    /** All restaurants (home carousel), with delivery terms for the given location. */
+    @GetMapping("/merchants")
+    MerchantsResponse merchants(@RequestParam(required = false) Double lat, @RequestParam(required = false) Double lng) {
+        GeoPoint location = lat != null && lng != null ? new GeoPoint(lat, lng) : null;
+        return new MerchantsResponse(getMerchant.list(location));
+    }
+
     @GetMapping("/merchants/{merchantId}")
     MerchantPageResult merchant(@PathVariable @Size(max = 64) String merchantId,
                                 @RequestParam(required = false) Double lat,
