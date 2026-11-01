@@ -14,7 +14,9 @@ public record Product(
         List<String> tags,
         boolean inStock,
         int serves,
-        List<OptionGroup> optionGroups) {
+        List<OptionGroup> optionGroups,
+        String imageUrl,
+        String categoryId) {
 
     public Product {
         tags = List.copyOf(tags);

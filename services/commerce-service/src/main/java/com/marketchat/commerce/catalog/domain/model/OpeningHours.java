@@ -21,6 +21,11 @@ public record OpeningHours(List<Slot> slots) {
         slots = List.copyOf(slots);
     }
 
+    /** Slots opening on the given day, in order (used to display today's hours). */
+    public List<Slot> slotsOn(DayOfWeek day) {
+        return slots.stream().filter(s -> s.day() == day).sorted(java.util.Comparator.comparing(Slot::opens)).toList();
+    }
+
     public boolean isOpenAt(ZonedDateTime at) {
         DayOfWeek today = at.getDayOfWeek();
         LocalTime time = at.toLocalTime();
