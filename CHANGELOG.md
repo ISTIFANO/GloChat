@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0
+- Continue with Google (Keycloak identity brokering), FR/AR/EN login pages
+- Restaurants list with delivery terms, open ones first
+- All service URLs come from environment variables; services fail fast when one is missing
+- README with setup, configuration and branching
+
 ## 0.3.1
 - Stripe checkout shows the GloChat order label
 
