@@ -1,6 +1,8 @@
 package com.marketchat.commerce.catalog.infrastructure.web;
 
+import com.marketchat.commerce.catalog.application.GetMerchantUseCase;
 import com.marketchat.commerce.catalog.application.GetProductUseCase;
+import com.marketchat.commerce.catalog.application.MerchantPageResult;
 import com.marketchat.commerce.catalog.application.ProductCardResult;
 import com.marketchat.commerce.catalog.application.ProductDetailResult;
 import com.marketchat.commerce.catalog.application.SearchCatalogQuery;
@@ -32,10 +34,12 @@ class CatalogController {
 
     private final SearchCatalogUseCase search;
     private final GetProductUseCase getProduct;
+    private final GetMerchantUseCase getMerchant;
 
-    CatalogController(SearchCatalogUseCase search, GetProductUseCase getProduct) {
+    CatalogController(SearchCatalogUseCase search, GetProductUseCase getProduct, GetMerchantUseCase getMerchant) {
         this.search = search;
         this.getProduct = getProduct;
+        this.getMerchant = getMerchant;
     }
 
     record Location(@NotNull @DecimalMin("-90") @DecimalMax("90") Double lat,
@@ -65,5 +69,13 @@ class CatalogController {
                                 @RequestParam(required = false) Double lng) {
         GeoPoint location = lat != null && lng != null ? new GeoPoint(lat, lng) : null;
         return getProduct.get(productId, location);
+    }
+
+    @GetMapping("/merchants/{merchantId}")
+    MerchantPageResult merchant(@PathVariable @Size(max = 64) String merchantId,
+                                @RequestParam(required = false) Double lat,
+                                @RequestParam(required = false) Double lng) {
+        GeoPoint location = lat != null && lng != null ? new GeoPoint(lat, lng) : null;
+        return getMerchant.get(merchantId, location);
     }
 }

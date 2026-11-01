@@ -1,5 +1,6 @@
 package com.marketchat.commerce.catalog.infrastructure;
 
+import com.marketchat.commerce.catalog.application.GetMerchantUseCase;
 import com.marketchat.commerce.catalog.application.GetProductUseCase;
 import com.marketchat.commerce.catalog.application.SearchCatalogUseCase;
 import com.marketchat.commerce.catalog.domain.port.CatalogRepository;
@@ -15,6 +16,11 @@ class CatalogConfiguration {
     @Bean
     SearchCatalogUseCase searchCatalogUseCase(CatalogRepository repository, Clock clock) {
         return new SearchCatalogUseCase(repository, clock);
+    }
+
+    @Bean
+    GetMerchantUseCase getMerchantUseCase(CatalogRepository repository, Clock clock) {
+        return new GetMerchantUseCase(repository, clock);
     }
 
     @Bean

@@ -95,6 +95,30 @@ class JdbcCatalogRepository implements CatalogRepository {
         return Optional.ofNullable(loadMerchants(List.of(merchantId)).get(merchantId));
     }
 
+    @Override
+    public List<MenuEntry> findMenu(String merchantId) {
+        record Row(String productId, String categoryId, String categoryName, int categoryPosition) {
+        }
+        List<Row> rows = jdbc.sql("""
+                        SELECT p.id, c.id AS category_id, c.name AS category_name, coalesce(c.position, 2147483647) AS category_position
+                          FROM products p
+                          LEFT JOIN categories c ON c.id = p.category_id AND c.active
+                         WHERE p.merchant_id = :merchantId AND p.active
+                         ORDER BY category_position, p.position, p.id""")
+                .param("merchantId", merchantId)
+                .query((rs, i) -> new Row(rs.getString("id"), rs.getString("category_id"), rs.getString("category_name"),
+                        rs.getInt("category_position")))
+                .list();
+        if (rows.isEmpty()) {
+            return List.of();
+        }
+        Map<String, Product> products = loadProducts(rows.stream().map(Row::productId).toList());
+        return rows.stream()
+                .filter(r -> products.containsKey(r.productId()))
+                .map(r -> new MenuEntry(r.categoryId(), r.categoryName(), r.categoryPosition(), products.get(r.productId())))
+                .toList();
+    }
+
     // ------------------------------------------------------------------ loading
 
     private Map<String, Product> loadProducts(Collection<String> ids) {
@@ -129,7 +153,7 @@ class JdbcCatalogRepository implements CatalogRepository {
 
         return jdbc.sql("""
                         SELECT id, merchant_id, name, description, base_price, currency, visual_emoji, visual_from, visual_to,
-                               tags, in_stock, serves
+                               tags, in_stock, serves, image_url, category_id
                           FROM products WHERE id = ANY(:ids) AND active""")
                 .param("ids", idArray)
                 .query((rs, i) -> new Product(
@@ -137,7 +161,8 @@ class JdbcCatalogRepository implements CatalogRepository {
                         rs.getBigDecimal("base_price"), rs.getString("currency").trim(),
                         new ProductVisual(rs.getString("visual_emoji"), rs.getString("visual_from"), rs.getString("visual_to")),
                         strings(rs.getArray("tags")), rs.getBoolean("in_stock"), rs.getInt("serves"),
-                        groupsByProduct.getOrDefault(rs.getString("id"), List.of())))
+                        groupsByProduct.getOrDefault(rs.getString("id"), List.of()),
+                        rs.getString("image_url"), rs.getString("category_id")))
                 .list().stream()
                 .collect(Collectors.toMap(Product::id, Function.identity()));
     }
@@ -153,7 +178,8 @@ class JdbcCatalogRepository implements CatalogRepository {
                 .list();
         return jdbc.sql("""
                         SELECT id, name, type, emoji, cuisine_tags, lat, lng, avg_prep_minutes, delivery_radius_km,
-                               base_delivery_fee, fee_per_km, min_order_amount, accepts_cash, accepts_card
+                               base_delivery_fee, fee_per_km, min_order_amount, accepts_cash, accepts_card,
+                               description, logo_url, cover_url
                           FROM merchants WHERE id = ANY(:ids) AND active""")
                 .param("ids", idArray)
                 .query((rs, i) -> new Merchant(
@@ -162,7 +188,8 @@ class JdbcCatalogRepository implements CatalogRepository {
                         rs.getInt("avg_prep_minutes"), rs.getDouble("delivery_radius_km"),
                         rs.getBigDecimal("base_delivery_fee"), rs.getBigDecimal("fee_per_km"), rs.getBigDecimal("min_order_amount"),
                         rs.getBoolean("accepts_cash"), rs.getBoolean("accepts_card"),
-                        new OpeningHours(hours.getOrDefault(rs.getString("id"), List.of()))))
+                        new OpeningHours(hours.getOrDefault(rs.getString("id"), List.of())),
+                        rs.getString("description"), rs.getString("logo_url"), rs.getString("cover_url")))
                 .list().stream()
                 .collect(Collectors.toMap(Merchant::id, Function.identity()));
     }

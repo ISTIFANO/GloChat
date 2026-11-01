@@ -27,6 +27,8 @@ import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -169,5 +171,61 @@ class CatalogApiIntegrationTest {
         mvc.perform(get("/api/catalog/products/nope"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code").value("PRODUCT_NOT_FOUND"));
+    }
+
+    @Test
+    void searchResultsCarryPhotoAndMerchantLogo() throws Exception {
+        clock.set("2026-11-04T20:00:00");
+        search("{\"query\":\"double smash\",\"location\":" + AGDAL + "}")
+                .andExpect(jsonPath("$.results[0].imageUrl").value("/api/catalog/media/products/p-double-smash.webp"))
+                .andExpect(jsonPath("$.results[0].merchant.logoUrl").value("/api/catalog/media/merchants/m-smash-logo.svg"));
+    }
+
+    @Test
+    void merchantPageHasBrandingTermsAndMenuByCategory() throws Exception {
+        clock.set("2026-11-04T20:00:00");
+        mvc.perform(get("/api/catalog/merchants/m-smash").param("lat", "33.9981").param("lng", "-6.8497"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.merchant.name").value("Smash Lab Agdal"))
+                .andExpect(jsonPath("$.merchant.coverUrl").value("/api/catalog/media/merchants/m-smash-cover.webp"))
+                .andExpect(jsonPath("$.merchant.open").value(true))
+                .andExpect(jsonPath("$.merchant.todayHours").value("11:00–02:00"))
+                .andExpect(jsonPath("$.merchant.delivers").value(true))
+                .andExpect(jsonPath("$.merchant.minOrderAmount").value(40.0))
+                .andExpect(jsonPath("$.sections[*].name", org.hamcrest.Matchers.contains("Burgers", "Accompagnements", "Boissons")))
+                .andExpect(jsonPath("$.sections[0].products", hasSize(3)))
+                .andExpect(jsonPath("$.sections[0].products[0].productId").value("p-double-smash"));
+    }
+
+    @Test
+    void closedMerchantPageSaysSo() throws Exception {
+        clock.set("2026-11-04T21:00:00"); // Café Atlas closes at 20:00
+        mvc.perform(get("/api/catalog/merchants/m-atlas"))
+                .andExpect(jsonPath("$.merchant.open").value(false))
+                .andExpect(jsonPath("$.merchant.todayHours").value("07:00–20:00"));
+    }
+
+    @Test
+    void unknownMerchantIs404WithCode() throws Exception {
+        mvc.perform(get("/api/catalog/merchants/nope"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value("MERCHANT_NOT_FOUND"));
+    }
+
+    @Test
+    void mediaIsPublicAndCacheable() throws Exception {
+        mvc.perform(get("/api/catalog/media/products/p-double-smash.webp"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("image/webp"))
+                .andExpect(header().string("Cache-Control", org.hamcrest.Matchers.containsString("max-age=604800")));
+        mvc.perform(get("/api/catalog/media/merchants/m-smash-logo.svg"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("image/svg+xml"));
+    }
+
+    @Test
+    void mediaPathTraversalIsBlocked() throws Exception {
+        mvc.perform(get("/api/catalog/media/../application.yml"))
+                .andExpect(status().is4xxClientError());
     }
 }
