@@ -11,6 +11,7 @@ public record ProductCardResult(
         String name,
         String shortDescription,
         ProductVisual visual,
+        String imageUrl,
         BigDecimal price,
         String currency,
         MerchantSummary merchant,

@@ -16,7 +16,7 @@ final class ProductCards {
         double distance = round1(m.location().distanceKmTo(location));
         String description = p.description().length() > 80 ? p.description().substring(0, 77) + "…" : p.description();
         return new ProductCardResult(
-                p.id(), p.name(), description, p.visual(), p.basePrice(), p.currency(),
+                p.id(), p.name(), description, p.visual(), p.imageUrl(), p.basePrice(), p.currency(),
                 MerchantSummary.of(m), distance, DeliveryTerms.etaText(m, distance), DeliveryTerms.fee(m, distance),
                 p.tags(), p.needsConfiguration(), m.hours().isOpenAt(now));
     }
