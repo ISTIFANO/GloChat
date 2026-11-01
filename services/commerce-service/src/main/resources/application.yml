@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: commerce-service
+
+server:
+  port: ${SERVER_PORT:8081}
+
+marketchat:
+  security:
+    # Tokens' "iss" claim (public URL) and where to fetch signing keys (may differ inside Docker)
+    issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/marketchat}
+    jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8180/realms/marketchat/protocol/openid-connect/certs}
+
+management:
+  tracing:
+    sampling:
+      probability: ${TRACING_SAMPLING_PROBABILITY:1.0}
+    export:
+      otlp:
+        enabled: ${OTEL_EXPORT_ENABLED:true}
+  opentelemetry:
+    resource-attributes:
+      deployment.environment: ${MARKETCHAT_ENV:dev}
+    tracing:
+      export:
+        otlp:
+          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/traces
+    logging:
+      export:
+        otlp:
+          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/logs
+  logging:
+    export:
+      otlp:
+        enabled: ${OTEL_EXPORT_ENABLED:true}
+  otlp:
+    metrics:
+      export:
+        enabled: ${OTEL_EXPORT_ENABLED:true}
+        url: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/metrics
+        step: 10s
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+logging:
+  structured:
+    format:
+      # JSON logs (Elastic Common Schema) with trace.id / span.id; use the Spring profile "plain-logs" for plain text
+      console: ecs
