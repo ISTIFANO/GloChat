@@ -69,7 +69,7 @@ class CatalogDomainTest {
 
         Merchant merchant = new Merchant("m", "M", MerchantType.RESTAURANT, "🍔", List.of("burger"),
                 new GeoPoint(34.0043, -6.8521), 15, 8, new BigDecimal("9"), new BigDecimal("3"), new BigDecimal("40"),
-                true, true, new OpeningHours(List.of()));
+                true, true, new OpeningHours(List.of()), "", null, null);
 
         @Test
         void haversineDistanceWithinRabat() {
