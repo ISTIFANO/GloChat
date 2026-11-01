@@ -13,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /** Step 0a smoke test: the service boots and reports UP on its liveness probe. */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@org.springframework.context.annotation.Import(com.marketchat.payment.support.TestcontainersConfiguration.class)
 class PaymentServiceApplicationTest {
 
     @Value("${local.server.port}")
