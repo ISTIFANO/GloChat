@@ -1,11 +1,30 @@
 spring:
   application:
     name: payment-service
+  datasource:
+    url: ${PAYMENT_DB_URL:jdbc:postgresql://localhost:5432/payment_db}
+    username: ${PAYMENT_DB_USER:payment}
+    # no default: the password comes from infra/.env (PAYMENT_DB_PASSWORD)
+    password: ${PAYMENT_DB_PASSWORD:}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
+    producer:
+      acks: all
+      properties:
+        enable.idempotence: true
 
 server:
   port: ${SERVER_PORT:8084}
 
 marketchat:
+  payment:
+    stripe:
+      # test-mode keys from infra/.env, never committed; empty = Stripe disabled (503 PAYMENT_PROVIDER_NOT_CONFIGURED)
+      secret-key: ${STRIPE_SECRET_KEY:}
+      # from `stripe listen` or the Dashboard webhook endpoint; empty = webhook disabled (sync on return still works)
+      webhook-secret: ${STRIPE_WEBHOOK_SECRET:}
+    # Stripe Checkout sessions live 30 minutes (Stripe's minimum), like the order payment timeout
+    session-ttl-minutes: 30
   security:
     issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/marketchat}
     jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8180/realms/marketchat/protocol/openid-connect/certs}

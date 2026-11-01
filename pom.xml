@@ -31,6 +31,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-ai.version>2.0.2</spring-ai.version>
         <spring-cloud.version>2025.1.4</spring-cloud.version>
+        <stripe-java.version>34.1.0</stripe-java.version>
         <archunit.version>1.5.1</archunit.version>
         <!-- OpenTelemetry instrumentation release aligned with the OTel SDK 1.55 managed by Spring Boot 4.0.9 -->
         <otel-instrumentation.version>2.21.0-alpha</otel-instrumentation.version>

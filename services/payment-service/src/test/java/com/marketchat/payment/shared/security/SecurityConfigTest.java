@@ -11,9 +11,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/** Step 0c: authorization rules of payment-service. 404 = allowed through security, no controller yet. */
+/** Authorization rules of payment-service: the webhook is public (signature-checked), /internal needs scope internal. */
 @SpringBootTest
 @AutoConfigureMockMvc
+@org.springframework.context.annotation.Import(com.marketchat.payment.support.TestcontainersConfiguration.class)
 class SecurityConfigTest {
 
     @Autowired
@@ -21,7 +22,8 @@ class SecurityConfigTest {
 
     @Test
     void stripeWebhookIsPublic() throws Exception {
-        mvc.perform(post("/api/payments/stripe/webhook")).andExpect(status().isNotFound());
+        // reaches the controller without a token; rejected there because the Stripe signature is missing
+        mvc.perform(post("/api/payments/stripe/webhook").content("{}")).andExpect(status().isBadRequest());
     }
 
     @Test
