@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0 — Ordering and payment
+- Cart: one merchant per cart, configurable products, saved addresses, repriced on read
+- Checkout: 10-minute quotes, idempotent confirmation, price-change detection
+- Orders: state machine, numbering, cancel rules, unpaid expiry, transactional outbox to Kafka
+- payment-service: Stripe Checkout, signed webhooks, payment events
+
 ## 0.2.0 — Catalog
 - Gemini chat model wired in agent-service
 - Cross-merchant search with accent/Arabic normalisation and ranking
