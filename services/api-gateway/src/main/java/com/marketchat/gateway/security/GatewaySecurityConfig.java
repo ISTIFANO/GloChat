@@ -10,6 +10,12 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+
+import java.time.Duration;
+import java.util.List;
 
 /**
  * First line of defence. The gateway validates the user token before routing; each service validates it again
@@ -23,7 +29,10 @@ public class GatewaySecurityConfig {
     SecurityWebFilterChain gatewaySecurity(ServerHttpSecurity http) {
         http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                // CORS is answered by the gateway only (services are never called from a browser directly)
+                .cors(Customizer.withDefaults())
                 .authorizeExchange(ex -> ex
+                        .pathMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
                         .pathMatchers("/actuator/health/**").permitAll()
                         // service-to-service endpoints are never reachable from outside
                         .pathMatchers("/internal/**").denyAll()
@@ -36,6 +45,21 @@ public class GatewaySecurityConfig {
                         .anyExchange().denyAll())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
         return http.build();
+    }
+
+    /** Only the configured front-end origins (comma-separated) may call the API from a browser. */
+    @Bean
+    CorsConfigurationSource corsConfigurationSource(@Value("${marketchat.cors.allowed-origins}") List<String> origins) {
+        CorsConfiguration cors = new CorsConfiguration();
+        cors.setAllowedOrigins(origins);
+        cors.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        cors.setAllowedHeaders(List.of("Authorization", "Content-Type", "Idempotency-Key", "traceparent"));
+        cors.setExposedHeaders(List.of("traceparent"));
+        cors.setAllowCredentials(false);   // bearer tokens, no cookies
+        cors.setMaxAge(Duration.ofHours(1));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", cors);
+        return source;
     }
 
     @Bean
