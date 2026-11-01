@@ -1,6 +1,24 @@
 spring:
   application:
     name: commerce-service
+  datasource:
+    url: ${COMMERCE_DB_URL:jdbc:postgresql://localhost:5432/commerce_db}
+    username: ${COMMERCE_DB_USER:commerce}
+    # no default: the password comes from infra/.env (COMMERCE_DB_PASSWORD)
+    password: ${COMMERCE_DB_PASSWORD:}
+  flyway:
+    locations: classpath:db/migration
+
+---
+# Demo data (fictional Rabat merchants): SPRING_PROFILES_ACTIVE=demo
+spring:
+  config:
+    activate:
+      on-profile: demo
+  flyway:
+    locations: classpath:db/migration,classpath:db/demo
+
+---
 
 server:
   port: ${SERVER_PORT:8081}
