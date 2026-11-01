@@ -1,22 +1,11 @@
 package com.marketchat.commerce.catalog.application;
 
-/** Business error with a stable code (spec §8 error codes), mapped to RFC 7807 by the web layer. */
-public class CatalogException extends RuntimeException {
+import com.marketchat.commerce.shared.domain.BusinessException;
 
-    private final String code;
-    private final int httpStatus;
+/** Catalog business error with a stable code (spec §8 error codes), mapped to RFC 7807 by the web layer. */
+public class CatalogException extends BusinessException {
 
     public CatalogException(String code, int httpStatus, String message) {
-        super(message);
-        this.code = code;
-        this.httpStatus = httpStatus;
-    }
-
-    public String code() {
-        return code;
-    }
-
-    public int httpStatus() {
-        return httpStatus;
+        super(code, httpStatus, message);
     }
 }

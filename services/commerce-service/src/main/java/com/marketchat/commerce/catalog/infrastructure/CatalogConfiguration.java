@@ -1,5 +1,6 @@
 package com.marketchat.commerce.catalog.infrastructure;
 
+import com.marketchat.commerce.catalog.application.CatalogPricing;
 import com.marketchat.commerce.catalog.application.GetMerchantUseCase;
 import com.marketchat.commerce.catalog.application.GetProductUseCase;
 import com.marketchat.commerce.catalog.application.SearchCatalogUseCase;
@@ -21,6 +22,11 @@ class CatalogConfiguration {
     @Bean
     GetMerchantUseCase getMerchantUseCase(CatalogRepository repository, Clock clock) {
         return new GetMerchantUseCase(repository, clock);
+    }
+
+    @Bean
+    CatalogPricing catalogPricing(CatalogRepository repository, Clock clock) {
+        return new CatalogPricing(repository, clock);
     }
 
     @Bean
