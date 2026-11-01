@@ -8,6 +8,15 @@ spring:
     password: ${COMMERCE_DB_PASSWORD:}
   flyway:
     locations: classpath:db/migration
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
+    producer:
+      acks: all
+      properties:
+        enable.idempotence: true
+    consumer:
+      auto-offset-reset: earliest
+      enable-auto-commit: false
 
 ---
 # Demo data (fictional Rabat merchants): SPRING_PROFILES_ACTIVE=demo
@@ -24,7 +33,16 @@ server:
   port: ${SERVER_PORT:8081}
 
 marketchat:
+  web:
+    # where Stripe sends the customer back (the separately deployed web app)
+    base-url: ${WEB_BASE_URL:http://localhost:4200}
+  payment:
+    base-url: ${PAYMENT_URL:http://localhost:8084}
+    client-id: commerce-service
+    # no default: from infra/.env (COMMERCE_CLIENT_SECRET)
+    client-secret: ${COMMERCE_CLIENT_SECRET:}
   security:
+    token-uri: ${KEYCLOAK_TOKEN_URI:http://localhost:8180/realms/marketchat/protocol/openid-connect/token}
     # Tokens' "iss" claim (public URL) and where to fetch signing keys (may differ inside Docker)
     issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/marketchat}
     jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8180/realms/marketchat/protocol/openid-connect/certs}
