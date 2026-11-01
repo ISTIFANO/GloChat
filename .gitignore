@@ -32,3 +32,11 @@ dist/
 *.log
 infra/.*.log
 infra/.body.tmp
+
+# Editor, AI-assistant and tooling files (not part of the product)
+.claude/
+CLAUDE.md
+.cursor/
+__pycache__/
+*.pyc
+*.tmp
