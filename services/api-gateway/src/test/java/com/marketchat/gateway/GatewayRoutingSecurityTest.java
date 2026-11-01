@@ -118,4 +118,25 @@ class GatewayRoutingSecurityTest {
     void invalidTokenIsRejected() {
         client.get().uri("/api/me/whoami").header("Authorization", "Bearer forged").exchange().expectStatus().isUnauthorized();
     }
+
+    @Test
+    void corsPreflightAllowsTheWebApp() {
+        client.options().uri("/api/catalog/search")
+                .header("Origin", "http://localhost:4200")
+                .header("Access-Control-Request-Method", "POST")
+                .header("Access-Control-Request-Headers", "content-type,authorization")
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().valueEquals("Access-Control-Allow-Origin", "http://localhost:4200");
+    }
+
+    @Test
+    void corsRejectsOtherOrigins() {
+        client.options().uri("/api/catalog/search")
+                .header("Origin", "https://evil.example")
+                .header("Access-Control-Request-Method", "POST")
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectHeader().doesNotExist("Access-Control-Allow-Origin");
+    }
 }
