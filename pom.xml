@@ -34,6 +34,7 @@
         <archunit.version>1.5.1</archunit.version>
         <!-- OpenTelemetry instrumentation release aligned with the OTel SDK 1.55 managed by Spring Boot 4.0.9 -->
         <otel-instrumentation.version>2.21.0-alpha</otel-instrumentation.version>
+        <protobuf.version>4.32.0</protobuf.version>
     </properties>
 
     <dependencyManagement>
@@ -67,6 +68,16 @@
                 <artifactId>opentelemetry-logback-appender-1.0</artifactId>
                 <version>${otel-instrumentation.version}</version>
             </dependency>
+            <!--
+              google-genai (Spring AI Gemini) brings protobuf 3.25, OpenTelemetry's OTLP proto needs 4.x
+              (com.google.protobuf.RuntimeVersion). Maven would pick 3.25 -> NoClassDefFoundError at startup.
+              protobuf 4.x runs code generated with 3.x, so we align everything on the OTel requirement.
+            -->
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -80,6 +91,8 @@
                         <environmentVariables>
                             <!-- unit/integration tests must not need a running Grafana/OTel collector -->
                             <OTEL_EXPORT_ENABLED>false</OTEL_EXPORT_ENABLED>
+                            <!-- no LLM in unit tests; the live Gemini test re-enables it explicitly -->
+                            <SPRING_AI_MODEL_CHAT>none</SPRING_AI_MODEL_CHAT>
                         </environmentVariables>
                     </configuration>
                 </plugin>
