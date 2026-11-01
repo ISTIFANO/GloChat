@@ -1,9 +1,31 @@
 spring:
   application:
     name: api-gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: commerce
+              uri: ${COMMERCE_URL:http://localhost:8081}
+              predicates:
+                - Path=/api/catalog/**,/api/cart/**,/api/checkout/**,/api/orders/**,/api/me/**
+            - id: agent
+              uri: ${AGENT_URL:http://localhost:8085}
+              predicates:
+                - Path=/api/chat/**,/api/conversations/**
+            - id: payment-webhook
+              uri: ${PAYMENT_URL:http://localhost:8084}
+              predicates:
+                - Path=/api/payments/stripe/webhook
 
 server:
   port: ${SERVER_PORT:8080}
+
+marketchat:
+  security:
+    issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/marketchat}
+    jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8180/realms/marketchat/protocol/openid-connect/certs}
 
 management:
   endpoints:
