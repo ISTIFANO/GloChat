@@ -7,15 +7,15 @@ spring:
         webflux:
           routes:
             - id: commerce
-              uri: ${COMMERCE_URL:http://localhost:8081}
+              uri: ${COMMERCE_URL}
               predicates:
                 - Path=/api/catalog/**,/api/cart/**,/api/checkout/**,/api/orders/**,/api/me/**
             - id: agent
-              uri: ${AGENT_URL:http://localhost:8085}
+              uri: ${AGENT_URL}
               predicates:
                 - Path=/api/chat/**,/api/conversations/**
             - id: payment-webhook
-              uri: ${PAYMENT_URL:http://localhost:8084}
+              uri: ${PAYMENT_URL}
               predicates:
                 - Path=/api/payments/stripe/webhook
 
@@ -25,10 +25,10 @@ server:
 marketchat:
   cors:
     # the separately deployed web app (marketchat-web); add production origins via env
-    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
+    allowed-origins: ${CORS_ALLOWED_ORIGINS}
   security:
-    issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/marketchat}
-    jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8180/realms/marketchat/protocol/openid-connect/certs}
+    issuer-uri: ${KEYCLOAK_ISSUER_URI}
+    jwk-set-uri: ${KEYCLOAK_JWK_SET_URI}
 
 management:
   tracing:
@@ -43,11 +43,11 @@ management:
     tracing:
       export:
         otlp:
-          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/traces
+          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT}/v1/traces
     logging:
       export:
         otlp:
-          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/logs
+          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT}/v1/logs
   logging:
     export:
       otlp:
@@ -56,7 +56,7 @@ management:
     metrics:
       export:
         enabled: ${OTEL_EXPORT_ENABLED:true}
-        url: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/metrics
+        url: ${OTEL_EXPORTER_OTLP_ENDPOINT}/v1/metrics
         step: 10s
   endpoints:
     web:

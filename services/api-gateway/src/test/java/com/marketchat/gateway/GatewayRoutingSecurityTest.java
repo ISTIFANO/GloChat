@@ -122,12 +122,12 @@ class GatewayRoutingSecurityTest {
     @Test
     void corsPreflightAllowsTheWebApp() {
         client.options().uri("/api/catalog/search")
-                .header("Origin", "http://localhost:4200")
+                .header("Origin", "http://web.test")
                 .header("Access-Control-Request-Method", "POST")
                 .header("Access-Control-Request-Headers", "content-type,authorization")
                 .exchange()
                 .expectStatus().isOk()
-                .expectHeader().valueEquals("Access-Control-Allow-Origin", "http://localhost:4200");
+                .expectHeader().valueEquals("Access-Control-Allow-Origin", "http://web.test");
     }
 
     @Test
