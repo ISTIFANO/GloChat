@@ -17,7 +17,10 @@ public record Merchant(
         BigDecimal minOrderAmount,
         boolean acceptsCash,
         boolean acceptsCard,
-        OpeningHours hours) {
+        OpeningHours hours,
+        String description,
+        String logoUrl,
+        String coverUrl) {
 
     public Merchant {
         cuisineTags = List.copyOf(cuisineTags);
