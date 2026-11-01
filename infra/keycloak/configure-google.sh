@@ -3,7 +3,7 @@
 # so the app keeps one identity system (same tokens, same backend checks) whatever the sign-in method.
 #
 # 1. Google Cloud Console -> APIs & Services -> Credentials -> Create OAuth client ID (type: Web application)
-#    Authorized redirect URI:  http://localhost:8180/realms/marketchat/broker/google/endpoint
+#    Authorized redirect URI:  <KEYCLOAK_PUBLIC_URL>/realms/marketchat/broker/google/endpoint
 # 2. Put GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in infra/.env (never committed)
 # 3. bash infra/keycloak/configure-google.sh
 #
@@ -16,9 +16,10 @@ set -a; source infra/.env; set +a
 
 : "${GOOGLE_CLIENT_ID:?set GOOGLE_CLIENT_ID in infra/.env}"
 : "${GOOGLE_CLIENT_SECRET:?set GOOGLE_CLIENT_SECRET in infra/.env}"
-KC=marketchat-keycloak-1
+KC="${KEYCLOAK_CONTAINER:-marketchat-keycloak-1}"
 kcadm() { docker exec "$KC" /opt/keycloak/bin/kcadm.sh "$@"; }
 
+# kcadm runs inside the Keycloak container, so it talks to its own port
 kcadm config credentials --server http://localhost:8080 --realm master \
   --user "$KEYCLOAK_ADMIN" --password "$KEYCLOAK_ADMIN_PASSWORD" >/dev/null
 
